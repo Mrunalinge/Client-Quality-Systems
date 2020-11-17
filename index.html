@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css">
+
+    <script type="text/javascript" src="/js/jquery-3.5.1.js"></script>
+
+    <title>Client Quality Systems</title>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-sm navbar-light bg-light border-bottom border-dark">
+      <div class="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active mr-3">
+            <a href="/"><img src="/images/home.png"></a> <!-- Home by Anang Taufik from the Noun Project -->
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/add_batch_record.html">ADD BATCH RECORD</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/add_worksheet.html">ADD MANUFACTURING WORKSHEET</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/manufacturing_worksheets.html">VIEW MANUFACTURING WORKSHEETS</a>
+          </li>
+      </div>
+      <div class="navbar-collapse collapse w-100 order-2 dual-collapse2">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="/admin.html">ADMIN PANEL</a>
+          </li>
+          <li class="nav-item">
+            <select class="custom-select rounded-0" id="chooseUserHeader">
+              <option disabled selected value="-1">Select User</option>
+            </select>
+          </li>
+        </ul>
+      </div>
+    </nav>
+    <br><br>
+    <div class="container" align="center">
+      <div class="col-8 pb-5" align="center">
+        <h1 class="display-1">CLIENT QUALITY SYSTEMS</h1>
+      </div>
+      <form action="/search_results.html">
+        <div class="form-row col-8">
+          <div class="col-3 mx-0 px-0">
+              <select name="field" class="form-control rounded-0 mx-0" id="searchField">
+                  <option disabled selected value="-1">Field...</option>
+                  <option value="0">Code No.</option>
+                  <option value="1">Date of Manufacture</option>
+                  <option value="2">Batch Number</option>
+              </select>
+          </div>
+          <div class="input-group col-9 mx-0 px-0">
+              <input type="text" name="query" class="form-control rounded-0 mx-0" placeholder="Search Batch Records" id="searchBar">
+              <button class="btn btn-outline-secondary rounded-0" type="submit">GO</button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <script>
+      var api_url = "api/users/getUsers.php";
+
+      $.ajax({
+          url: api_url,
+          async: false,
+          type: 'GET',
+          contentType: "application/json",
+          success: function(result){
+            for(var i = 0; i < result.records.length; i++){
+              $("#chooseUserHeader").append('<option value="'+result.records[i].user_id+'">'+result.records[i].user_name+'</option>');
+            }
+          },
+          error: function(jqXHR, exception){
+            console.log(jqXHR);
+            console.log(exception);
+          }
+      });
+      console.log(document.cookie);
+
+      $(document).ready(function() {
+        console.log(document.cookie);
+
+        if (document.cookie.includes("user")){
+          var user = document.cookie.split("user=")[1].split(";")[0];
+          $("#chooseUser").val(user);
+          $("#chooseUserHeader").val(user);
+        }
+      });
+
+      $(document).on('change', '#chooseUser', function (){
+        document.cookie="user=" + $("#chooseUser").val() + "; samesite=strict; path=/";
+        $("#chooseUserHeader").val($("#chooseUser").val());
+      });
+
+      $(document).on('change', '#chooseUserHeader', function (){
+        document.cookie="user=" + $("#chooseUserHeader").val() + "; samesite=strict; path=/";
+        $("#chooseUser").val($("#chooseUserHeader").val());
+      });
+    </script>
+  </body>
+</html>

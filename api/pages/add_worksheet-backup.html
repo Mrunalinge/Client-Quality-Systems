@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+
+    <title>Add Manufacturing Worksheet</title>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-sm navbar-light bg-light border-bottom border-dark">
+      <a href="/"><img src="../images/home.png"></a> <!-- Home by Anang Taufik from the Noun Project -->
+      <div class="navbar-collapse collapse justify-content-stretch" id="navbar5">
+        <div class="w-100 text-center h1 font-weight-bold">
+          ADD MANUFACTURING WORKSHEET
+        </div>
+      </div>
+    </nav>
+    <br><br>
+    <div class="container">
+      <form>
+        <div class="form-group form-inline">
+          <div class="container" id="preliminaryInfo">
+            <div class="row">
+              <div class="col-2 d-flex flex-row-reverse">
+                <label for="inputCodeNo">CODE NO.</label>
+              </div>
+              <div class="col-10 d-flex flex-row">
+                <input type="text" class="form-control col-2 rounded-0" id="inputCodeNo">
+                <label for="inputWeight" class="pl-4 pr-3">WEIGHT</label>
+                <input type="text" class="form-control col-1 rounded-0" id="inputWeight">
+                <label for="inputWeight" class="pl-4 pr-3">CUSTOMER</label>
+                <input type="text" class="form-control col rounded-0" id="inputCustomer">
+                <div class="col-2"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-group form-inline py-5">
+          <div class="container" id='steps'>
+            <div class="row stepRow py-1" id="step1">
+              <div class="col-2 d-flex flex-row-reverse">
+                <label class="py-2" id= "label_0">STEPS:&nbsp&nbsp&nbsp&nbsp1.</label>
+              </div>
+              <div class="form-inline col-10">
+                <input type="text" class="col-10 form-control rounded-0"id = "step_1"><button class="btn btn-primary addRow rounded-0" type="button">+</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-group form-inline py-5">
+          <div class="container" id='ingredients'>
+            <div class="row ingredientRow py-1" id="ingredient1">
+              <div class="col-2 d-flex flex-row-reverse">
+                <label class="py-2">INGREDIENTS:&nbsp&nbsp&nbsp&nbsp1.</label>
+              </div>
+              <div class="form-inline col-10">
+                <input type="text" placeholder="AMOUNT" class="col-2 form-control rounded-0" id="amount_1">
+                <input type="text" placeholder="UNIT" class="col-2 form-control rounded-0" id="unit_1">
+                <input type="text" placeholder="MATERIAL" class="col-6 form-control rounded-0" id="mat_1">
+                <button class="btn btn-primary addIngredient rounded-0" type="button">+</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-group form-inline pt-5">
+          <div class="container">
+            <div class="row pb-3">
+              <div class="col-2 d-flex flex-row-reverse">
+                <label class="py-2">AM PENETRATION</label>
+              </div>
+              <div class="form-inline col-10">
+                <input type="text" class="col-3 form-control rounded-0" id="pen">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-2 d-flex flex-row-reverse align-items-start">
+                <label class="py-2">NOTES</label>
+              </div>
+              <div class="form-inline col-10 align-items-end">
+                <textarea class="col-10 form-control rounded-0" rows="3" id="notes"></textarea>
+                <button class="btn btn-primary rounded-0" type="button" id= "sub" >SUBMIT</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <script>
+        var stepCount =1;
+        var ingridientCount=1;
+      $("#steps").on('click', '.addRow', function() {
+        var next = $('#steps').children().last().attr('id').replace('step', '');
+        console.log(next);
+        next++;
+        var html = '';
+        html += '<div class="row stepRow py-1" id="step' + next + '">';
+        html += '<div class="col-2 d-flex flex-row-reverse">';
+        html += '<label class="py-2" id = "label_' + next + '">' + next + '.</label></div>';
+        html += '<div class="form-inline col-10">';
+        html += '<input type="text" class="col-10 form-control rounded-0" id = "step_'+next+'"><button style="width: 37px" class="btn btn-danger removeStep rounded-0" type="button">‒</button>';
+        html += '</div></div>';
+        stepCount = next;
+        $('#steps').append(html);
+      });
+
+      $("#steps").on('click', '.removeStep', function() {
+        $(this).closest('.stepRow').nextAll().each(function(index, element){
+          var newID = $(element).attr('id').replace('step', '');
+          newID--;
+          $(element).children('.col-2').children('label').text(newID+'. ');
+          newID = 'step'+newID;
+          $(element).attr('id', newID);
+        });
+        stepCount = newID;
+        $(this).closest('.stepRow').remove();
+      });
+
+      $("#ingredients").on('click', '.addIngredient', function() {
+        var next = $('#ingredients').children().last().attr('id').replace('ingredient', '');
+        next++;
+        var html = '';
+        html += '<div class="row ingredientRow py-1" id="ingredient' + next + '">';
+        html += '<div class="col-2 d-flex flex-row-reverse">';
+        html += '<label class="py-2">' + next + '.</label></div>';
+        html += '<div class="form-inline col-10">';
+        html += '<input type="text" placeholder="AMOUNT" class="col-2 form-control rounded-0" id="amount_'+ next + '">';
+        html += '<input type="text" placeholder="UNIT" class="col-2 form-control rounded-0" id="unit_'+ next + '">';
+        html += '<input type="text" placeholder="MATERIAL" class="col-6 form-control rounded-0" id="mat_'+ next + '">';
+        html += '<button style="width: 37px" class="btn btn-danger removeIngredient rounded-0" type="button">‒</button>';
+        html += '</div></div>';
+        ingridientCount = next;
+        $('#ingredients').append(html);
+      });
+
+      $("#ingredients").on('click', '.removeIngredient', function() {
+        $(this).closest('.ingredientRow').nextAll().each(function(index, element){
+          var newID = $(element).attr('id').replace('ingredient', '');
+          newID--;
+          $(element).children('.col-2').children('label').text(newID+'. ');
+          newID = 'ingredient'+newID;
+          $(element).attr('id', newID);
+        });
+        ingridientCount = newID;
+        $(this).closest('.ingredientRow').remove();
+      });
+      $("#sub").click(function() {
+              var product_code_ = $("#inputCodeNo").val();//$('input[id="inputCodeNo"]').val;
+              var weight_ = $("#inputWeight").val(); //$('input[id="inputWeight"]').val;
+              var customer_ = $("#inputCustomer").val();//$('input[id="inputCustomer"]').val;
+              var desired_pen_ = $("#pen").val();
+              var notes_ = $("#notes").val();
+              var stepArr = [];
+              var ingridientArr = [];
+              for(var i=1;i<=stepCount;i++){
+                  var value = $("#step_"+i).val();
+                  var obj = {key_ : i, value_ : value};
+                  stepArr.push(obj);
+                  console.log(stepArr[i-1]);
+                  $("#step_"+i).val("");
+              }
+              for(var j=1;j<=ingridientCount;j++){
+                  var amount = $("#amount_"+j).val();
+                  var unit = $("#unit_"+j).val();
+                  var material = $("#mat_"+j).val();
+                  var obj = {key_ : j,amount_: amount ,unit_:unit, material_: material};
+                  ingridientArr.push(obj);
+                  console.log(ingridientArr[j-1]);
+                  $("#amount_"+j).val("");
+                  $("#unit_"+j).val("");
+                  $("#mat_"+j).val("");
+              }
+    
+              var api_url = '../worksheet/create.php';
+              var input_data = {product_code: product_code_, weight:weight_, customer:customer_, steps: stepArr, ingredients:ingridientArr, desired_pen: desired_pen_, notes: notes_ };
+              console.log(input_data);
+              var json_input = JSON.stringify(input_data);
+              console.log(json_input);
+
+              $.ajax({
+                  url: api_url ,
+                  type: 'POST',
+                  dataType: 'text',
+                  contentType: "application/json",
+                  data: json_input, //JSON.stringify(input_data),//{product_code: product_code_, weight:weight_, customer:customer_, desired_pen: desired_pen_, notes: notes_ },
+                  success: function(result){
+                      alert("Worksheet added successfully");
+                  }
+              });
+              $("#inputCodeNo").val("");
+              $("#inputWeight").val("");
+              $("#inputCustomer").val("");
+              $("#pen").val("");
+              $("#notes").val("");
+
+      });
+    </script>
+
+  </body>
+</html>

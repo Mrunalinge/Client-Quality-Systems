@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+
+    <title>Add Batch Record</title>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-sm navbar-light bg-light border-bottom border-dark">
+      <a href="/"><img src="../images/home.png"></a> <!-- Home by Anang Taufik from the Noun Project -->
+      <div class="navbar-collapse collapse justify-content-stretch" id="navbar5">
+        <div class="w-100 text-center h1 font-weight-bold">
+          ADD BATCH RECORD
+        </div>
+      </div>
+    </nav>
+    <br><br>
+    <div class="container">
+      <form>
+        <div class="form-group form-inline">
+          <div class="container" id="preliminaryInfo">
+            <div class="row pb-5">
+              <div class="col-2 d-flex flex-row-reverse">
+                <label for="chooseUser">CURRENT USER</label>
+              </div>
+              <div class="col-10 d-flex flex-row">
+                <input type="text" class="form-control col-3 rounded-0" id="chooseUser">
+                <label for="datetimepicker1" class="pl-5 pr-3">DATE</label>
+                <input placeholder="Select date" type="date" class="col-2 form-control rounded-0" id="datetimepicker1">
+                <label for="inputBatchNo" class="pl-5 pr-3">BATCH NO.</label>
+                <input type="text" class="form-control col-1 rounded-0" id="inputBatchNo">
+                <div class="col-1"></div>
+              </div>
+            </div>
+            <div class="row pb-5">
+              <div class="col-2 d-flex flex-row-reverse">
+                <label for="inputCodeNo">CODE NO.</label>
+              </div>
+              <div class="col-10 d-flex flex-row">
+                <input type="text" class="form-control col-2 rounded-0" id="inputCodeNo">
+                <label for="inputWeight" class="pl-5 pr-3">SPONGE WEIGHT</label>
+                <input type="text" class="form-control col-1 rounded-0" id="inputWeight">
+                <label for="inputSize" class="pl-5 pr-3">BATCH SIZE</label>
+                <input type="text" class="form-control col-1 rounded-0" id="inputSize">
+                <div class="col-1"></div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-2 d-flex flex-row-reverse">
+                <label for="inputInitialPH1">INITIAL PH</label>
+              </div>
+              <div class="col-5">
+                <input type="text" class="form-control col-2 rounded-0" style="height: 28px" id="inputInitialPH1" placeholder="0.0">
+                <div class="w-100"></div>
+                <input type="text" class="form-control col-2 rounded-0" style="height: 28px" id="inputInitialPH2" placeholder="0.0">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-group form-inline py-5">
+          <div class="container">
+            <div class="row py-1">
+              <div class="col-2 d-flex flex-row-reverse">
+                <span class="py-2">ADJUSTMENTS:</span>
+              </div>
+              <div class="col-10 form-inline" id="adjustments">
+                <!--<input type="text" class="form-control rounded-0 mr-4" style="height: 56px">-->
+                <button class="btn btn-primary rounded-0 mb-3" type="button" id="addAdjustment">+</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-group form-inline">
+          <div class="container" id="postliminaryInfo">
+            <div class="row pb-5">
+              <div class="col-2 d-flex flex-row-reverse">
+                <label for="inputPenetration">AM PENETRATION</label>
+              </div>
+              <div class="col-10 d-flex flex-row">
+                <input type="text" class="form-control col-2 rounded-0" id="inputPenetration">
+                <label for="inputDropPoint" class="pl-5 pr-3">DROP POINT</label>
+                <input type="text" class="form-control col-1 rounded-0" id="inputDropPoint">
+                <div class="col-1"></div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-2 d-flex flex-row-reverse align-items-start">
+                <label class="py-2">NOTES</label>
+              </div>
+              <div class="form-inline col-10 align-items-end">
+                <textarea class="col-10 form-control rounded-0" rows="3" id="inputNotes"></textarea>
+                <button class="btn btn-primary rounded-0" type="button" id="sub">SUBMIT</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <script>
+      $("#adjustments").on('click', '#addAdjustment', function() {
+        var html = '';
+        html += '<div class="col-3 mr-3 mb-3 px-0"><select class="custom-select rounded-0 adjustmentSelect col-9">';
+        html += '<option value="0" disabled selected>Adjustment Type</option>';
+        html += '<option value="1">pH Adjustment</option>';
+        html += '<option value="2">Under/Over Cutting Oil</option>';
+        html += '<option value="3">At Formula</option>';
+        html += '<option value="4">Penetration Result</option>';
+        html += '</select>';
+        html += '<button style="width: 37px" class="btn btn-danger removeAdjustment rounded-0" type="button">‒</button></div>';
+
+        $(html).insertBefore($("#addAdjustment"));
+      });
+
+      $("#adjustments").on('change', '.adjustmentSelect', function () {
+        var adjustType = $(this).val();
+        var html = '';
+        switch(adjustType) {
+          case "1":
+            html += '<div class="col-3 mr-3 pr-0 pb-3 row pHAdjustment"><div class="col-9 px-0">';
+            html += '<input type="text" class="form-control col-8 rounded-0" style="height: 28px" placeholder="Amount">';
+            html += '<input type="text" class="form-control col-4 rounded-0" style="height: 28px" placeholder="0.0">';
+            html += '<div class="w-100"></div>';
+            html += '<input type="text" class="form-control col-8 rounded-0" style="height: 28px" placeholder="Material">';
+            html += '<input type="text" class="form-control col-4 rounded-0" style="height: 28px" placeholder="0.0"></div>';
+            html += '<button style="width: 38px; height: 38px" class="btn btn-danger removeAdjustment rounded-0 my-2" type="button">‒</button></div>';
+            break;
+          case "2":
+            html += '<div class="col-2 mr-3 pr-0 pb-3 row underOver"><div class="col-8 px-0">';
+            html += '<input type="text" class="form-control col-12 rounded-0" style="height: 28px" placeholder="U/O Amt">';
+            html += '<div class="w-100"></div>';
+            html += '<input type="text" class="form-control col-12 rounded-0" style="height: 28px" placeholder="Oil"></div>';
+            html += '<button style="width: 38px; height: 38px" class="btn btn-danger removeAdjustment rounded-0 my-2" type="button">‒</button></div>';
+            break;
+          case "3":
+            html += '<div class="col-2 mr-3 pr-0 pb-3 row atFormula"><div class="col-4 px-0 my-2">';
+            html += '<img src="/images/atFormula.png"></div>';
+            html += '<button style="width: 38px; height: 38px" class="btn btn-danger removeAdjustment rounded-0 my-2" type="button">‒</button></div>';
+            break;
+          case "4":
+            html += '<div class="col-2 mr-3 pr-0 pb-3 row penResult"><div class="col-6 px-0 my-2">';
+            html += '<input type="text" class="form-control col-12 rounded-0" placeholder="Pen"></div>';
+            html += '<button style="width: 38px; height: 38px" class="btn btn-danger removeAdjustment rounded-0 my-2" type="button">‒</button></div>';
+            break;
+        }
+        $(this).parent().replaceWith(html);
+      });
+
+      $("#adjustments").on('click', '.removeAdjustment', function() {
+        $(this).parent().remove();
+      });
+      $("#sub").click(function() {
+              var product_code_ = $("#inputCodeNo").val();//$('input[id="inputCodeNo"]').val;
+              var created_date_ = $("#datetimepicker1").val(); //$('input[id="inputWeight"]').val;
+              var batch_num_ = $("#inputBatchNo").val();//$('input[id="inputCustomer"]').val;
+              var batch_size_ = $("#inputSize").val();
+              var sponge_wt_ = $("#inputWeight").val();
+              var initial_ph_1 = $("#inputInitialPH1").val();
+              var initial_ph_2 = $("#inputInitialPH2").val();
+              var initial_ph_ = initial_ph_1 +"/"+ initial_ph_2;
+              console.log(initial_ph_);
+              var am_pen_ = $("#inputPenetration").val();
+              var dp_ = $("#inputDropPoint").val();
+              var notes_ = $("#inputNotes").val();
+       
+
+    
+              var api_url = "../batches/create.php";
+              var input_data = {product_code:product_code_, created_date:created_date_, batch_num:batch_num_, batch_size:batch_size_,initial_ph:initial_ph_ ,sponge_wt:sponge_wt_, am_pen: am_pen_,dp: dp_ ,notes: notes_ };
+              console.log(input_data);
+              var json_input = JSON.stringify(input_data);
+              console.log(json_input);
+
+              $.ajax({
+                  url: api_url ,
+                  type: 'POST',
+                  dataType: 'text',
+                  contentType: "application/json",
+                  data: json_input, 
+                  success: function(result){
+                      alert(result);
+                      alert("success");
+                  },
+                  error: function(jqXHR, exception){
+                    console.log(jqXHR);
+                    console.log(exception);
+                  }
+              });
+              $("#inputCodeNo").val("");
+              $("#inputBatchNo").val("");
+              $("#inputSize").val("");
+              $("#inputWeight").val("");
+              $("#inputInitialPH1").val("");
+              $("#inputInitialPH2").val("");
+              //var initial_ph_ = $initial_ph_1."/".$initial_ph_2
+              $("#inputPenetration").val("");
+              $("#inputDropPoint").val("");
+              $("#inputNotes").val("");
+
+      });
+        //$('#datetimepicker1').datetimepicker();
+    </script>
+
+  </body>
+</html>

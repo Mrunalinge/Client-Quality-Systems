@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" type="text/css" href="api/css/bootstrap.min.css">
+    <link rel="stylesheet2" type="text/css" href="api/css/dataTables.bootstrap4.min.css">
+
+    <script type="text/javascript" src="api/js/jquery-3.5.1.js"></script>
+    <script type="text/javascript" src="api/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="api/js/dataTables.bootstrap4.min.js"></script>
+
+    <title>Search Results</title>
+  </head>
+  <body>
+  <div style="width:95%; margin: 0 auto">
+    <table id="results" class="table table-striped table-bordered"></table>
+  </div>
+    <script>
+      $(document).ready(function() {
+        updateTable();
+      });
+
+      function updateTable() {
+        console.log("Called function")
+        var field = getParameterByName("field");
+        var query = getParameterByName("query");
+        if (field == "0" && query.includes("-")){
+          query = query.split("-")[0];
+        }
+        var obj = {option: field, search: query};
+        var input = JSON.stringify(obj);
+        var api_url = "api/batches/search.php";
+        var final_data = [];
+        $.ajax({
+                url: api_url ,
+                async: false,
+                type: 'POST',
+                dataType: 'text',
+                contentType: "application/json",
+                data: input,
+                success: function(result) {
+                    // console.log(result);
+
+                   // result = JSON.stringify(result);
+                   result= JSON.parse(result);
+                   var records = result.records;
+                   // console.log(records);
+
+                   var len = Object.keys(records).length;
+                   console.log(len);
+
+                   for(var i = 0; i < len; i++){
+                      var product_code = records[i].product_code;
+                      var date = records[i].created_date
+                      var batch_no = records[i].batch_num;
+                      var batch_size = records[i].batch_size;
+                      var tests_adjustment = "";
+                      var drop_point = records[i].dp;
+                      var am = records[i].am_pen;
+                      if (am == -1){ am = ""; }
+                      if (drop_point == -1){ drop_point = ""; }
+                      var batch_id = records[i].batch_id;
+                      final_data.push([product_code, batch_no, batch_size, tests_adjustment, drop_point, am, batch_id]);
+                    }
+                },
+                error: function(jqXHR, exception){
+                  console.log(jqXHR);
+                  console.log(exception);
+                }
+            });
+
+        for(var i = 0; i < final_data.length; i++){
+          obj = {batch_id:final_data[i][6]};
+          input = JSON.stringify(obj);
+          api_url = "api/adjustment/search.php";
+          // console.log(input);
+
+          $.ajax({
+                  url: api_url ,
+                  async: false,
+                  type: 'POST',
+                  dataType: 'text',
+                  contentType: "application/json",
+                  data: input,
+                  success: function(result) {
+                    result = JSON.parse(result);
+                    console.log(result);
+                    var adjust_string = "";
+                    for(var j = 0; j < result.records.length; j++){
+                      if (j > 0){
+                        adjust_string += " → ";
+                      }
+                      if (result.records[j].adjust_text == "atFormula"){
+                        adjust_string += '<img src="api/images/atFormula.png"></img>';
+                      } else{
+                        adjust_string += result.records[j].adjust_text;
+                      }
+                    }
+                    final_data[i][3] = adjust_string;
+                  },
+                  error: function(jqXHR, exception){
+                    console.log(jqXHR);
+                    console.log(exception);
+                  }
+              });
+          final_data[i].pop();
+        }
+        $('#results').DataTable({
+          data: final_data,
+          columns: [
+            { title: "Code No.", width: "110px" },
+            { title: "Batch No.", width: "115px" },
+            { title: "Size", width: "75px" },
+            { title: "Tests & Adjustments" },
+            { title: "DP", width: "50px" },
+            { title: "AM Pen", width: "105px" }
+          ]
+        });
+      }
+
+      // Function borrowed from https://stackoverflow.com/questions/901115/how-can-i-get-query-string-values-in-javascript
+      function getParameterByName(name, url = window.location.href) {
+        name = name.replace(/[\[\]]/g, '\\$&');
+        var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, ' '));
+      }
+    </script>
+
+  </body>
+</html>

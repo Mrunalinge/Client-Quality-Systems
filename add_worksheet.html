@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" type="text/css" href="api/css/bootstrap.min.css">
+
+    <script type="text/javascript" src="api/js/jquery-3.5.1.js"></script>
+
+    <title>Add Manufacturing Worksheet</title>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-sm navbar-light bg-light border-bottom border-dark">
+      <a href="/"><img src="api/images/home.png"></a> <!-- Home by Anang Taufik from the Noun Project -->
+      <div class="navbar-collapse collapse justify-content-stretch" id="navbar5">
+        <div class="w-100 text-center h1 font-weight-bold">
+          ADD MANUFACTURING WORKSHEET
+        </div>
+      </div>
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <select class="custom-select rounded-0" id="chooseUserHeader">
+            <option disabled selected value="-1">Select User</option>
+          </select>
+        </li>
+      </ul>
+    </nav>
+    <br><br>
+    <div class="container">
+      <form>
+        <div class="form-group form-inline pb-5">
+          <div class="col-2 d-flex flex-row-reverse">
+            <label for="chooseUser">CURRENT USER</label>
+          </div>
+          <div class="col-10 d-flex flex-row">
+            <select class="custom-select rounded-0" id="chooseUser">
+              <option disabled selected value="-1">Select User</option>
+            </select>
+            <label for="inputWeight" class="pl-5 pr-4">CUSTOMER</label>
+            <input type="text" class="form-control col-3 rounded-0" id="inputCustomer">
+          </div>
+        </div>
+        <div class="form-group form-inline pb-5">
+          <div class="container" id="preliminaryInfo">
+            <div class="row pt-3">
+              <div class="col-2 d-flex flex-row-reverse">
+                <label>AM PENETRATION</label>
+              </div>
+              <div class="form-inline col-8">
+                <input type="text" class="col-1 form-control rounded-0 mr-2" id="minPen" placeholder="Min">
+                <span>—</span>
+                <input type="text" class="col-1 form-control rounded-0 ml-2" id="maxPen" placeholder="Max">
+                <label for="inputCodeNo" class="pl-4 pr-3">CODE NO.</label>
+                <input type="text" class="form-control col-2 rounded-0" id="inputCodeNo">
+                <label for="inputWeight" class="pl-4 pr-3">SPONGE WT</label>
+                <input type="text" class="form-control col-2 rounded-0" id="inputSpongeWt">
+                <!-- <label for="inputWeight" class="pl-5 pr-4">SPONGE WT</label>
+                <input type="text" class="form-control col-2 rounded-0" id="inputSpongeWt"> -->
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-group form-inline pb-5">
+          <div class="container" id='steps'>
+            <div class="row stepRow" id="step1">
+              <div class="col-2 d-flex flex-row-reverse">
+                <label class="py-2" id= "label_0">STEPS:&nbsp&nbsp&nbsp&nbsp1.</label>
+              </div>
+              <div class="form-inline col-10">
+                <input type="text" class="col-10 form-control rounded-0"id = "step_1">
+                <button style="width: 38px; height: 38px; background-image: url('api/images/plus.svg'); background-size: 15px 15px; background-repeat: no-repeat; background-position: center" class="btn btn-primary rounded-0 addRow" type="button"></button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-group form-inline py-5">
+          <div class="container" id='ingredients'>
+            <div class="row ingredientRow py-1" id="ingredient1">
+              <div class="col-2 d-flex flex-row-reverse">
+                <label class="py-2">INGREDIENTS:&nbsp&nbsp&nbsp&nbsp1.</label>
+              </div>
+              <div class="form-inline col-10">
+                <input type="text" placeholder="AMOUNT" class="col-2 form-control rounded-0" id="amount_1">
+                <input type="text" placeholder="UNIT" class="col-2 form-control rounded-0" id="unit_1">
+                <input type="text" placeholder="MATERIAL" class="col-6 form-control rounded-0" id="mat_1">
+                <button style="width: 38px; height: 38px; background-image: url('api/images/plus.svg'); background-size: 15px 15px; background-repeat: no-repeat; background-position: center" class="btn btn-primary rounded-0 addIngredient" type="button"></button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-group form-inline pt-5">
+          <div class="container">
+            <div class="row">
+              <div class="col-2 d-flex flex-row-reverse align-items-start">
+                <label class="py-2">NOTES</label>
+              </div>
+              <div class="form-inline col-10 align-items-end">
+                <textarea class="col-10 form-control rounded-0" rows="3" id="notes"></textarea>
+                <button class="btn btn-primary rounded-0" type="button" id= "sub" >SUBMIT</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <script>
+      var api_url = "api/users/getUsers.php";
+
+      $.ajax({
+          url: api_url,
+          async: false,
+          type: 'GET',
+          contentType: "application/json",
+          success: function(result){
+            for(var i = 0; i < result.records.length; i++){
+              $("#chooseUserHeader").append('<option value="'+result.records[i].user_id+'">'+result.records[i].user_name+'</option>');
+              $("#chooseUser").append('<option value="'+result.records[i].user_id+'">'+result.records[i].user_name+'</option>');
+            }
+          },
+          error: function(jqXHR, exception){
+            console.log(jqXHR);
+            console.log(exception);
+          }
+      });
+      console.log(document.cookie);
+
+      $(document).ready(function() {
+        console.log(document.cookie);
+
+        if (document.cookie.includes("user")){
+          var user = document.cookie.split("user=")[1].split(";")[0];
+          $("#chooseUser").val(user);
+          $("#chooseUserHeader").val(user);
+        }
+      });
+
+      $(document).on('change', '#chooseUser', function (){
+        document.cookie="user=" + $("#chooseUser").val() + "; samesite=strict; path=/";
+        $("#chooseUserHeader").val($("#chooseUser").val());
+      });
+
+      $(document).on('change', '#chooseUserHeader', function (){
+        document.cookie="user=" + $("#chooseUserHeader").val() + "; samesite=strict; path=/";
+        $("#chooseUser").val($("#chooseUserHeader").val());
+      });
+
+      var stepCount =1;
+      var ingredientCount=1;
+      $("#steps").on('click', '.addRow', function() {
+        var next = $('#steps').children().last().attr('id').replace('step', '');
+        console.log(next);
+        next++;
+        var html = '';
+        html += '<div class="row stepRow notFirst py-1" id="step' + next + '">';
+        html += '<div class="col-2 d-flex flex-row-reverse">';
+        html += '<label class="py-2" id = "label_' + next + '">' + next + '.</label></div>';
+        html += '<div class="form-inline col-10 d-flex align-items-start">';
+        html += '<input type="text" class="col-10 form-control rounded-0" id = "step_'+next+'">';
+        html += '<button style="width: 20px; height: 20px; background-image: url(\'api/images/cross.svg\'); background-size: 10px 10px; background-repeat: no-repeat; background-position: center" class="btn btn-danger removeStep rounded-0 mt-0 px-0 pb-0" type="button"></button>';
+        html += '</div></div>';
+        stepCount = next;
+        $('#steps').append(html);
+      });
+
+      $("#steps").on('click', '.removeStep', function() {
+        if (confirm("Remove step?")){
+          $(this).closest('.stepRow').nextAll().each(function(index, element){
+            var newID = $(element).attr('id').replace('step', '');
+            newID--;
+            stepCount = newID;
+            $(element).children('.col-2').children('label').text(newID+'. ');
+            newID = 'step'+newID;
+            $(element).attr('id', newID);
+          });
+          $(this).closest('.stepRow').remove();
+        }
+      });
+
+      $("#ingredients").on('click', '.addIngredient', function() {
+        var next = $('#ingredients').children().last().attr('id').replace('ingredient', '');
+        next++;
+        var html = '';
+        html += '<div class="row ingredientRow notFirst py-1" id="ingredient' + next + '">';
+        html += '<div class="col-2 d-flex flex-row-reverse">';
+        html += '<label class="py-2">' + next + '.</label></div>';
+        html += '<div class="form-inline col-10 d-flex align-items-start">';
+        html += '<input type="text" placeholder="AMOUNT" class="col-2 form-control rounded-0" id="amount_'+ next + '">';
+        html += '<input type="text" placeholder="UNIT" class="col-2 form-control rounded-0" id="unit_'+ next + '">';
+        html += '<input type="text" placeholder="MATERIAL" class="col-6 form-control rounded-0" id="mat_'+ next + '">';
+        html += '<button style="width: 20px; height: 20px; background-image: url(\'api/images/cross.svg\'); background-size: 10px 10px; background-repeat: no-repeat; background-position: center" class="btn btn-danger removeIngredient rounded-0 mt-0 px-0 pb-0" type="button"></button>';
+        html += '</div></div>';
+        ingredientCount = next;
+        $('#ingredients').append(html);
+      });
+
+      $("#ingredients").on('click', '.removeIngredient', function() {
+        if (confirm("Remove ingredient?")){
+          $(this).closest('.ingredientRow').nextAll().each(function(index, element){
+            var newID = $(element).attr('id').replace('ingredient', '');
+            newID--;
+            ingredientCount = newID;
+            $(element).children('.col-2').children('label').text(newID+'. ');
+            newID = 'ingredient'+newID;
+            $(element).attr('id', newID);
+          });
+          $(this).closest('.ingredientRow').remove();
+        }
+      });
+
+    $("#sub").click(function() {
+            console.log("Ingredients: " + ingredientCount);
+            console.log("Steps: " + stepCount);
+            var product_code_ = $("#inputCodeNo").val();//$('input[id="inputCodeNo"]').val;
+            var weight_ = $("#inputSpongeWt").val(); //$('input[id="inputWeight"]').val;
+            var customer_ = $("#inputCustomer").val();//$('input[id="inputCustomer"]').val;
+            var min_pen_ = $("#minPen").val();
+            var max_pen_ = $("#maxPen").val();
+            var notes_ = $("#notes").val();
+            var stepArr = [];
+            var ingredientArr = [];
+            for(var i=1;i<=stepCount;i++){
+                var value = $("#step_"+i).val();
+                var obj = {key_ : i, value_ : value};
+                stepArr.push(obj);
+                console.log(stepArr[i-1]);
+                $("#step_"+i).val("");
+            }
+            for(var j=1;j<=ingredientCount;j++){
+                var amount = parseInt($("#amount_"+j).val());
+                var unit = $("#unit_"+j).val();
+                var material = $("#mat_"+j).val();
+                var obj = {key_ : j,amount_: amount ,unit_:unit, material_: material};
+                ingredientArr.push(obj);
+                console.log(ingredientArr[j-1]);
+                $("#amount_"+j).val("");
+                $("#unit_"+j).val("");
+                $("#mat_"+j).val("");
+            }
+
+            var api_url = 'api/worksheet/create.php';
+            var input_data = { product_code: product_code_, weight:weight_, customer:customer_, steps: stepArr, ingredients:ingredientArr, min_pen: min_pen_, max_pen: max_pen_, notes: notes_ };
+            console.log(input_data);
+            var json_input = JSON.stringify(input_data);
+            console.log(json_input);
+
+            $.ajax({
+                url: api_url ,
+                type: 'POST',
+                dataType: 'text',
+                contentType: "application/json",
+                data: json_input, //JSON.stringify(input_data),//{product_code: product_code_, weight:weight_, customer:customer_, desired_pen: desired_pen_, notes: notes_ },
+                success: function(result){
+                    alert("Worksheet added successfully");
+
+                }
+            });
+            $("#inputCodeNo").val("");
+            $("#inputSpongeWt").val("");
+            $("#inputCustomer").val("");
+            $("#minPen").val("");
+            $("#maxPen").val("");
+            $("#notes").val("");
+            $("div").remove(".notFirst");
+
+    });
+    </script>
+
+  </body>
+</html>

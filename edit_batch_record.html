@@ -1,0 +1,637 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" type="text/css" href="api/css/bootstrap.min.css">
+
+    <script type="text/javascript" src="api/js/jquery-3.5.1.js"></script>
+    <script type="text/javascript" src="api/js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" src="api/js/popper.min.js"></script>
+
+    <style>
+      .border-left{
+        border-left:1px solid #000!important;
+      }
+      .border-right{
+        border-right:1px solid #000!important;
+      }
+    </style>
+
+    <script>
+      var pH1_ = -1;
+      var pH2_ = -1;
+    </script>
+
+    <title>Edit Batch Record</title>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-sm navbar-light bg-light border-bottom border-dark">
+      <a href="/"><img src="api/images/home.png"></a> <!-- Home by Anang Taufik from the Noun Project -->
+      <div class="navbar-collapse collapse justify-content-stretch" id="navbar5">
+        <div class="w-100 text-center h1 font-weight-bold">
+          EDIT BATCH RECORD
+        </div>
+      </div>
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <select class="custom-select rounded-0" id="chooseUserHeader">
+            <option disabled selected value="-1">Select User</option>
+          </select>
+        </li>
+      </ul>
+    </nav>
+    <div class="row mt-5" id="main_content" style="width: 100%; height: 100%">
+      <div class="col-5 embed-responsive border-right" id="historyPanel" style="display: none">
+        <iframe id="historyFrame" class="embed-responsive-item" src="" height="100%" width="100%"></iframe>
+      </div>
+      <div class="col-7" style="margin: auto">
+        <form id="batch_record">
+          <div class="form-group form-inline">
+            <div class="container" id="preliminaryInfo">
+              <div class="row pb-5">
+                <div class="col-2 d-flex flex-row-reverse">
+                  <label for="chooseUser">CURRENT USER</label>
+                </div>
+                <div class="col-10 d-flex flex-row">
+                  <select class="custom-select rounded-0" id="chooseUser" required>
+                    <option disabled selected value="-1">Select User</option>
+                  </select>
+                  <label for="datetimepicker1" class="pl-5 pr-3" required>DATE</label>
+                  <input placeholder="Select date" type="date" class="col-2 form-control rounded-0" id="datetimepicker1" required>
+                  <label for="inputBatchNo" class="pl-5 pr-3" required>BATCH NO.</label>
+                  <input type="text" pattern="[0-9]*-[0-9]*" class="form-control col-1 rounded-0" id="inputBatchNo" required>
+                  <div class="col-1"></div>
+                </div>
+              </div>
+              <div class="row pb-5">
+                <div class="col-2 d-flex flex-row-reverse">
+                  <label for="inputCodeNo">CODE NO.</label>
+                </div>
+                <div class="col-10 d-flex flex-row">
+                  <input type="text" pattern="[0-9]*(-[0-9]*)?" class="form-control col-2 rounded-0" id="inputCodeNo" required>
+                  <button title="Toggle History Pane" class="btn btn-primary rounded-0 mx-0" style="width: 36px; background-image: url('api/images/history.svg'); background-size: 30px 30px; background-repeat: no-repeat; background-position: center" type="button" id="toggleHistoryPanel"></button>
+                  <!-- History by The Icon Z from the Noun Project -->
+                  <!-- <label for="inputWeight" class="pl-5 pr-3">SPONGE WEIGHT</label>
+                  <input type="text" pattern="[0-9]+" class="form-control col-1 rounded-0" id="inputWeight" required>
+                  <label for="inputSize" class="pl-5 pr-3">BATCH SIZE</label>
+                  <input type="text" pattern="[0-9]+" class="form-control col-1 rounded-0" id="inputSize" required> -->
+                  <label for="chooseWorksheet" class="pl-5 pr-3">MAN WORKSHEET</label>
+                  <select class="custom-select rounded-0" id="chooseWorksheet" required>
+                    <option disabled selected value="-1">CHOOSE WORKSHEET</option>
+                  </select>
+                  <button class="btn btn-primary rounded-0 mx-0" style="width: 38px; height: 38px; background-image: url('api/images/view.svg'); background-size: 30px 30px; background-repeat: no-repeat; background-position: center" type="button" id="toggleWorksheetPanel"></button>
+                  <div class="col-1"></div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-2 d-flex flex-row-reverse">
+                  <label for="inputSize">BATCH SIZE</label>
+                </div>
+                <!-- <div class="col-2">
+                  <input type="text" pattern="[0-9]+\.[0-9]+" class="form-control col-5 rounded-0" style="height: 28px" id="inputInitialPH1" placeholder="0.0" required>
+                  <div class="w-100"></div>
+                  <input type="text" pattern="[0-9]+\.[0-9]+" class="form-control col-5 rounded-0" style="height: 28px" id="inputInitialPH2" placeholder="0.0" required>
+                </div> -->
+                <div class="col-10 d-flex flex-row">
+                  <!-- <label for="inputWeight" class="pl-5 pr-3">SPONGE WEIGHT</label>
+                  <input type="text" pattern="[0-9]+" class="form-control col-1 rounded-0" id="inputWeight" required> -->
+                  <!-- <label for="inputSize" class="pl-5 pr-3">BATCH SIZE</label> -->
+                  <input type="text" pattern="[0-9]+" class="form-control col-1 rounded-0" id="inputSize" required>
+                  <!-- <label for="chooseWorksheet" class="pl-5 pr-3">MAN WORKSHEET</label>
+                  <select class="custom-select rounded-0 mt-2" id="chooseWorksheet" required>
+                    <option disabled selected value="-1">CHOOSE WORKSHEET</option>
+                  </select>
+                  <button class="btn btn-primary rounded-0 mx-0 mt-2" style="width: 38px; height: 38px; background-image: url('api/images/view.svg'); background-size: 30px 30px; background-repeat: no-repeat; background-position: center" type="button" id="toggleWorksheetPanel"></button> -->
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group form-inline py-5">
+            <div class="container">
+              <div class="row py-1">
+                <div class="col-2 d-flex flex-row-reverse">
+                  <span class="py-2">ADJUSTMENTS:</span>
+                </div>
+                <div class="col-10 form-inline d-flex align-items-start" id="adjustments">
+                  <button style="width: 38px; height: 38px; background-image: url('api/images/plus.svg'); background-size: 15px 15px; background-repeat: no-repeat; background-position: center" class="btn btn-primary rounded-0 mt-1" type="button" id="addAdjustment"></button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group form-inline">
+            <div class="container" id="postliminaryInfo">
+              <div class="row pb-5">
+                <div class="col-2 d-flex flex-row-reverse">
+                  <label for="inputPenetration">AM PENETRATION</label>
+                </div>
+                <div class="col-10 d-flex flex-row">
+                  <input type="text" pattern="[0-9]+" data-toggle="tooltip" data-placement="top" class="form-control col-2 rounded-0" id="inputPenetration">
+                  <label for="inputDropPoint" class="pl-5 pr-3">DROP POINT</label>
+                  <input type="text" pattern="[0-9]+" class="form-control col-1 rounded-0" id="inputDropPoint">
+                  <div class="col-1"></div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-2 d-flex flex-row-reverse align-items-start">
+                  <label class="py-2">NOTES</label>
+                </div>
+                <div class="form-inline col-10 align-items-end">
+                  <textarea class="col-10 form-control rounded-0" rows="3" id="inputNotes"></textarea>
+                  <button class="btn btn-primary rounded-0" type="submit" id="sub">SUBMIT</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="col-5 embed-responsive border-left" id="worksheetPanel" style="display: none">
+        <iframe id="worksheetFrame" class="embed-responsive-item" src="" height="100%" width="100%"></iframe>
+      </div>
+    </div>
+
+    <script>
+      function getParameterByName(name, url = window.location.href) {
+        name = name.replace(/[\[\]]/g, '\\$&');
+        var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, ' '));
+      }
+
+      $(document).ready(function() {
+        var api_url = "api/users/getUsers.php";
+
+        $.ajax({
+            url: api_url,
+            async: false,
+            type: 'GET',
+            contentType: "application/json",
+            success: function(result){
+                for(var i = 0; i < result.records.length; i++){
+                  $("#chooseUserHeader").append('<option value="'+result.records[i].user_id+'">'+result.records[i].user_name+'</option>');
+                  $("#chooseUser").append('<option value="'+result.records[i].user_id+'">'+result.records[i].user_name+'</option>');
+                }
+            },
+            error: function(jqXHR, exception){
+              console.log(jqXHR);
+              console.log(exception);
+            }
+        });
+
+        if (document.cookie.includes("user")){
+          var user = document.cookie.split("user=")[1].split(";")[0];
+          $("#chooseUser").val(user);
+          $("#chooseUserHeader").val(user);
+        }
+
+        var batch_id = getParameterByName("id");
+        console.log(batch_id);
+        var obj = {option: "3", search: batch_id};
+        var input = JSON.stringify(obj);
+        var api_url = "api/batches/search.php";
+        $.ajax({
+                url: api_url ,
+                async: false,
+                type: 'POST',
+                dataType: 'text',
+                contentType: "application/json",
+                data: input,
+                success: function(result) {
+                    console.log(result);
+
+                   // result = JSON.stringify(result);
+                   result= JSON.parse(result);
+                   var records = result.records[0];
+                   // console.log(records);
+
+                   var len = Object.keys(records).length;
+                   console.log(len);
+
+                   $("#datetimepicker1").val(records.created_date);
+                   $("#inputBatchNo").val(records.batch_num);
+                   $("#inputCodeNo").val(records.product_code);
+                   $("#inputCodeNo").change();
+                   $("#inputCodeNo").prop("disabled", true);
+                   // $("#inputWeight").val(records.sponge_wt);
+                   $("#inputSize").val(records.batch_size);
+                   var initialPh = records.initial_ph;
+                   // $("#inputInitialPH1").val(initialPh.split("/")[0]);
+                   // $("#inputInitialPH2").val(initialPh.split("/")[1]);
+                   $("#chooseWorksheet").val(records.worksheet_id);
+                   $("#chooseWorksheet").prop("disabled", true);
+                   if (records.am_pen != -1){
+                     $("#inputPenetration").val(records.am_pen);
+                   }
+                   if (records.dp != -1){
+                     $("#inputDropPoint").val(records.dp);
+                   }
+                   $("#inputNotes").val(records.notes);
+                },
+                error: function(jqXHR, exception){
+                  console.log(jqXHR);
+                  console.log(exception);
+                }
+            });
+
+            var worksheet_id = $("#chooseWorksheet").val();
+            obj = {worksheet_id:worksheet_id};
+            input = JSON.stringify(obj);
+            api_url = "api/worksheet/readOne.php";
+
+            $.ajax({
+              url: api_url,
+              async: false,
+              type: 'POST',
+              dataType: 'text',
+              contentType: "application/json",
+              data: input,
+              success: function(result) {
+                result = JSON.parse(result);
+                result = result.records[0];
+                pH1_ = result.min_pen;
+                pH2_ = result.max_pen;
+                $("#inputPenetration").change();
+              },
+              error: function(jqXHR, exception){
+                console.log(jqXHR);
+                console.log(exception);
+              }
+            });
+
+        obj = {batch_id:batch_id};
+        input = JSON.stringify(obj);
+        api_url = "api/adjustment/search.php";
+        // console.log(input);
+
+        $.ajax({
+                url: api_url ,
+                async: false,
+                type: 'POST',
+                dataType: 'text',
+                contentType: "application/json",
+                data: input,
+                success: function(result) {
+                  result = JSON.parse(result);
+                  console.log(result);
+                  var adjust_string = "";
+                  for(var j = 0; j < result.records.length; j++){
+                    var html = '';
+                    if (result.records[j].adjust_type == "pHAdjustment"){
+                      html += '<div class="col-2 mr-3 pr-0 pb-3 mt-1 row pHAdjustment" id="newAdjust"><div class="col-8 px-0">';
+                      html += '<input type="text" class="form-control col-12 rounded-0 pHAmount" style="height: 28px" placeholder="Amount">';
+                      html += '<div class="w-100"></div>';
+                      html += '<input type="text" class="form-control col-12 rounded-0 pHMat" style="height: 28px" placeholder="Material">';
+                      html += '</div>';
+                      html += '<button style="width: 20px; height: 20px; background-image: url(\'api/images/cross.svg\'); background-size: 10px 10px; background-repeat: no-repeat; background-position: center" class="btn btn-danger removeAdjustment rounded-0 mt-0 px-0 pb-0" type="button"></button>';
+                      html += '<label class="text-secondary">pH Adjustment</label></div>';
+
+                      $(html).insertBefore($("#addAdjustment"));
+
+                      $("#newAdjust").find(".pHAmount").val(result.records[j].adjust_text.split("/")[0]);
+                      $("#newAdjust").find(".pHMat").val(result.records[j].adjust_text.split("/")[1]);
+
+                      $("#newAdjust").attr("id", "");
+                    }
+                    if (result.records[j].adjust_type == "underOverOil"){
+                      html += '<div class="col-2 mr-3 pr-0 pb-3 mt-1 row underOverOil" id="newAdjust"><div class="col-8 px-0">';
+                      html += '<input type="text" class="form-control col-12 rounded-0 UOAmt" style="height: 28px" placeholder="U/O Amt">';
+                      html += '<div class="w-100"></div>';
+                      html += '<input type="text" class="form-control col-12 rounded-0 UOMat" style="height: 28px" placeholder="Oil"></div>';
+                      html += '<button style="width: 20px; height: 20px; background-image: url(\'api/images/cross.svg\'); background-size: 10px 10px; background-repeat: no-repeat; background-position: center" class="btn btn-danger removeAdjustment rounded-0 mt-0 px-0 pb-0" type="button"></button>';
+                      html += '<label class="text-secondary">U/O Oils</label></div>';
+
+                      $(html).insertBefore($("#addAdjustment"));
+
+                      $("#newAdjust").find(".UOAmt").val(result.records[j].adjust_text.split("/")[0]);
+                      $("#newAdjust").find(".UOMat").val(result.records[j].adjust_text.split("/")[1]);
+
+                      $("#newAdjust").attr("id", "");
+                    }
+                    if (result.records[j].adjust_type == "penResult"){
+                      html += '<div class="col-2 mr-3 pr-0 pb-3 mt-1 row penResult" id="newAdjust"><div class="col-6 px-0 my-2">';
+                      html += '<input type="text" class="form-control col-12 rounded-0 pen" placeholder="Pen"></div>';
+                      html += '<button style="width: 20px; height: 20px; background-image: url(\'api/images/cross.svg\'); background-size: 10px 10px; background-repeat: no-repeat; background-position: center" class="btn btn-danger removeAdjustment rounded-0 mt-0 px-0 pb-0" type="button"></button>';
+                      html += '<label class="text-secondary">Penetration</label></div>';
+
+                      $(html).insertBefore($("#addAdjustment"));
+
+                      $("#newAdjust").find(".pen").val(result.records[j].adjust_text);
+
+                      $("#newAdjust").attr("id", "");
+                    }
+                    if (result.records[j].adjust_type == "atFormula"){
+                      html += '<div class="col-2 mr-3 pr-0 pb-3 mt-1 row atFormula"><div class="col-4 px-0 my-2">';
+                      html += '<img src="api/images/atFormula.png"></div>';
+                      html += '<button style="width: 20px; height: 20px; background-image: url(\'api/images/cross.svg\'); background-size: 10px 10px; background-repeat: no-repeat; background-position: center" class="btn btn-danger removeAdjustment rounded-0 mt-0 px-0 pb-0" type="button"></button>';
+                      html += '<label class="text-secondary">At Formula</label></div>';
+
+                      $(html).insertBefore($("#addAdjustment"));
+                    }
+                    if (result.records[j].adjust_type == "titration"){
+                      html += '<div class="col-2 mr-3 pr-0 pb-3 mt-1 row titration" id="newAdjust"><div class="col-8 px-0">';
+                      html += '<input type="text" class="form-control col rounded-0 pH1" style="height: 28px" placeholder="0.0">';
+                      html += '<div class="w-100"></div>';
+                      html += '<input type="text" class="form-control col rounded-0 pH2" style="height: 28px" placeholder="0.0"></div>';
+                      html += '<button style="width: 20px; height: 20px; background-image: url(\'api/images/cross.svg\'); background-size: 10px 10px; background-repeat: no-repeat; background-position: center" class="btn btn-danger removeAdjustment rounded-0 mt-0 px-0 pb-0" type="button"></button>';
+                      html += '<label class="text-secondary">Titration</label></div>';
+
+                      $(html).insertBefore($("#addAdjustment"));
+
+                      $("#newAdjust").find(".pH1").val(result.records[j].adjust_text.split("/")[0]);
+                      $("#newAdjust").find(".pH2").val(result.records[j].adjust_text.split("/")[1]);
+
+                      $("#newAdjust").attr("id", "");
+                    }
+                  }
+                },
+                error: function(jqXHR, exception){
+                  console.log(jqXHR);
+                  console.log(exception);
+                }
+            });
+      });
+
+      $(document).on('change', '#chooseUser', function (){
+        document.cookie="user=" + $("#chooseUser").val() + "; samesite=strict; path=/";
+        $("#chooseUserHeader").val($("#chooseUser").val());
+      });
+
+      $(document).on('change', '#chooseUserHeader', function (){
+        document.cookie="user=" + $("#chooseUserHeader").val() + "; samesite=strict; path=/";
+        $("#chooseUser").val($("#chooseUserHeader").val());
+      });
+
+      $("#adjustments").on('click', '#addAdjustment', function() {
+        var html = '';
+        html += '<div class="col-3 mr-3 mb-3 px-0 d-flex align-items-start"><select class="custom-select rounded-0 adjustmentSelect col-9">';
+        html += '<option value="0" disabled selected>Adjustment Type</option>';
+        html += '<option value="1">pH Adjustment</option>';
+        html += '<option value="2">Under/Over Cutting Oil</option>';
+        html += '<option value="3">At Formula</option>';
+        html += '<option value="4">Penetration Result</option>';
+        html += '<option value="5">Titration Result</option>';
+        html += '</select>';
+        html += '<button style="width: 20px; height: 20px; background-image: url(\'api/images/cross.svg\'); background-size: 10px 10px; background-repeat: no-repeat; background-position: center" class="btn btn-danger removeAdjustment rounded-0 mt-0 px-0 pb-0" type="button">‒</button></div>';
+
+        $(html).insertBefore($("#addAdjustment"));
+      });
+
+      $("#adjustments").on('change', '.adjustmentSelect', function () {
+        var adjustType = $(this).val();
+        var html = '';
+        switch(adjustType) {
+          case "1":
+            html += '<div class="col-2 mr-3 pr-0 pb-3 mt-1 row pHAdjustment"><div class="col-8 px-0">';
+            html += '<input type="text" class="form-control col-12 rounded-0 pHAmount" style="height: 28px" placeholder="Amount">';
+            html += '<div class="w-100"></div>';
+            html += '<input type="text" class="form-control col-12 rounded-0 pHMat" style="height: 28px" placeholder="Material">';
+            html += '</div>';
+            html += '<button style="width: 20px; height: 20px; background-image: url(\'api/images/cross.svg\'); background-size: 10px 10px; background-repeat: no-repeat; background-position: center" class="btn btn-danger removeAdjustment rounded-0 mt-0 px-0 pb-0" type="button"></button>';
+            html += '<label class="text-secondary">pH Adjustment</label></div>';
+            break;
+          case "2":
+            html += '<div class="col-2 mr-3 pr-0 pb-3 mt-1 row underOverOil"><div class="col-8 px-0">';
+            html += '<input type="text" class="form-control col-12 rounded-0 UOAmt" style="height: 28px" placeholder="U/O Amt">';
+            html += '<div class="w-100"></div>';
+            html += '<input type="text" class="form-control col-12 rounded-0 UOMat" style="height: 28px" placeholder="Oil"></div>';
+            html += '<button style="width: 20px; height: 20px; background-image: url(\'api/images/cross.svg\'); background-size: 10px 10px; background-repeat: no-repeat; background-position: center" class="btn btn-danger removeAdjustment rounded-0 mt-0 px-0 pb-0" type="button"></button>';
+            html += '<label class="text-secondary">U/O Oils</label></div>';
+            break;
+          case "3":
+            html += '<div class="col-2 mr-3 pr-0 pb-3 mt-1 row atFormula"><div class="col-4 px-0 my-2">';
+            html += '<img src="api/images/atFormula.png"></div>';
+            html += '<button style="width: 20px; height: 20px; background-image: url(\'api/images/cross.svg\'); background-size: 10px 10px; background-repeat: no-repeat; background-position: center" class="btn btn-danger removeAdjustment rounded-0 mt-0 px-0 pb-0" type="button"></button>';
+            html += '<label class="text-secondary">At Formula</label></div>';
+            break;
+          case "4":
+            html += '<div class="col-2 mr-3 pr-0 pb-3 mt-1 row penResult"><div class="col-6 px-0 my-2">';
+            html += '<input type="text" class="form-control col-12 rounded-0 pen" placeholder="Pen"></div>';
+            html += '<button style="width: 20px; height: 20px; background-image: url(\'api/images/cross.svg\'); background-size: 10px 10px; background-repeat: no-repeat; background-position: center" class="btn btn-danger removeAdjustment rounded-0 mt-0 px-0 pb-0" type="button"></button>';
+            html += '<label class="text-secondary">Penetration</label></div>';
+            break;
+          case "5":
+            html += '<div class="col-2 mr-3 pr-0 pb-3 mt-1 row titration"><div class="col-8 px-0">';
+            html += '<input type="text" class="form-control col rounded-0 pH1" style="height: 28px" placeholder="0.0">';
+            html += '<div class="w-100"></div>';
+            html += '<input type="text" class="form-control col rounded-0 pH2" style="height: 28px" placeholder="0.0"></div>';
+            html += '<button style="width: 20px; height: 20px; background-image: url(\'api/images/cross.svg\'); background-size: 10px 10px; background-repeat: no-repeat; background-position: center" class="btn btn-danger removeAdjustment rounded-0 mt-0 px-0 pb-0" type="button"></button>';
+            html += '<label class="text-secondary">Titration</label></div>';
+            break;
+        }
+        $(this).parent().replaceWith(html);
+      });
+
+      $("#adjustments").on('click', '.removeAdjustment', function() {
+        if (confirm("Remove adjustment?")){
+          $(this).parent().remove();
+        }
+      });
+
+      $("#sub").click(function() {
+        if (pH1_ != -1 && pH2_ != -1){
+          if ($("#inputPenetration").val() != ""){
+            var am_pen = parseInt($("#inputPenetration").val());
+            if (am_pen < pH1_ || am_pen > pH2_){
+              if (!confirm("Penetration value is outside of range specified by Manufacturing Worksheet. Save anyway?")){
+                return;
+              }
+            }
+          }
+        }
+
+        var product_code_ = $("#inputCodeNo").val();//$('input[id="inputCodeNo"]').val;
+        var created_date_ = $("#datetimepicker1").val(); //$('input[id="inputWeight"]').val;
+        var worksheet_id_ = $("#chooseWorksheet").val();
+        var batch_num_ = $("#inputBatchNo").val();//$('input[id="inputCustomer"]').val;
+        var batch_size_ = $("#inputSize").val();
+        // var sponge_wt_ = $("#inputWeight").val();
+        var sponge_wt_ = -1;
+        // var initial_ph_1 = $("#inputInitialPH1").val();
+        // var initial_ph_2 = $("#inputInitialPH2").val();
+        var initial_ph_1 = 0.0;
+        var initial_ph_2 = 0.0
+        var initial_ph_ = initial_ph_1 +"/"+ initial_ph_2;
+        var deleted_ = "0";
+        var am_pen_ = $("#inputPenetration").val();
+        var dp_ = $("#inputDropPoint").val();
+        var notes_ = $("#inputNotes").val();
+        var last_modified_ = Date.now();
+
+        var adjustments = [];
+        var chronology_ = 1;
+        var batch_id_ = getParameterByName("id");
+        $("#adjustments").children().each(function (){
+          if ($(this).is("button")){
+            return;
+          }
+          if ($(this).hasClass("pHAdjustment")){
+            var adj_string_ = $(this).find(".pHAmount").val() + "/" + $(this).find(".pHMat").val();
+            adjustments.push({adjust_type:"pHAdjustment", adjust_text:adj_string_, chronology:chronology_, batch_id:batch_id_});
+            chronology_ += 1;
+          }
+          else if ($(this).hasClass("underOverOil")){
+            var adj_string_ = $(this).find(".UOAmt").val() + "/" + $(this).find(".UOMat").val();
+            adjustments.push({adjust_type:"underOverOil", adjust_text:adj_string_, chronology:chronology_, batch_id:batch_id_});
+            chronology_ += 1;
+          }
+          else if ($(this).hasClass("penResult")){
+            var adj_string_ = $(this).find(".pen").val();
+            adjustments.push({adjust_type:"penResult", adjust_text:adj_string_, chronology:chronology_, batch_id:batch_id_});
+            chronology_ += 1;
+          }
+          else if ($(this).hasClass("atFormula")){
+            var adj_string_ = "atFormula";
+            adjustments.push({adjust_type:"atFormula", adjust_text:adj_string_, chronology:chronology_, batch_id:batch_id_});
+            chronology_ += 1;
+          }
+          else if ($(this).hasClass("titration")){
+            var adj_string_ = $(this).find(".pH1").val() + "/" + $(this).find(".pH2").val();
+            adjustments.push({adjust_type:"titration", adjust_text:adj_string_, chronology:chronology_, batch_id:batch_id_});
+            chronology_ += 1;
+          }
+        });
+        console.log(adjustments);
+
+        var api_url = "api/batches/update.php";
+        var batch_id_ = getParameterByName("id");
+        var input_data = {batch_id:batch_id_, product_code:product_code_, created_date:created_date_, worksheet_id:worksheet_id_, batch_num:batch_num_, batch_size:batch_size_, initial_ph:initial_ph_, sponge_wt:sponge_wt_, deleted:deleted_, am_pen:am_pen_, dp:dp_, notes:notes_, last_modified:last_modified_, adjustments:adjustments };
+        console.log(input_data);
+        var json_input = JSON.stringify(input_data);
+        console.log(json_input);
+
+        $.ajax({
+            url: api_url ,
+            async: false,
+            type: 'POST',
+            dataType: 'text',
+            contentType: "application/json",
+            data: json_input,
+            success: function(result){
+                alert("Successfully Updated Batch Record!");
+            },
+            error: function(jqXHR, exception){
+              console.log(jqXHR);
+              console.log(exception);
+            }
+        });
+      });
+
+            $("#preliminaryInfo").on('change', '#inputCodeNo', function () {
+              var x = "product_code";
+              console.log(x);
+              var y = $("#inputCodeNo").val();
+              console.log(y);
+              var obj = {option: x, search: y};
+              var input = JSON.stringify(obj);
+              console.log(input);
+              var api_url = "api/worksheet/search.php";
+              $.ajax({
+                      url: api_url ,
+                      async: false,
+                      type: 'POST',
+                      dataType: 'text',
+                      contentType: "application/json",
+                      data: input,
+                      success: function(result) {
+
+                         result= JSON.parse(result);
+                         console.log(result);
+                         var len = Object.keys(result.records).length;
+                         console.log("len: " + len);
+
+                         $("#chooseWorksheet").empty();
+                         $("#chooseWorksheet").append("<option disabled selected>CHOOSE WORKSHEET</option>");
+
+                          for(var i=0; i< len;i++){
+                              var product_code = result.records[i].product_code;
+                              var worksheet_id = result.records[i].worksheet_id;
+                              var customer = result.records[i].customer;
+                              $("#chooseWorksheet").append("<option value=" + worksheet_id + ">" + product_code + " - " + customer + "</option>");
+                          }
+
+                      },
+                      error: function(jqXHR, exception){
+                        console.log(jqXHR);
+                        console.log(exception);
+                      }
+                  });
+          });
+
+          $("#toggleHistoryPanel").click(function() {
+            if ($("#historyPanel").is(":hidden") && $("#inputCodeNo").val() != ""){
+              if ($("#worksheetPanel").is(":visible")){
+                $("#worksheetPanel").hide(500);
+                setTimeout(function(){
+                  $("#worksheetFrame").attr("src", "");
+                }, 500);
+                $("#historyPanel").delay(500).show(500);
+                setTimeout(function(){
+                  $("#historyFrame").attr("src", "search_results_panel.html?field=0&query="+$("#inputCodeNo").val());
+                }, 500);
+              }
+              else{
+                $("#historyPanel").show(500);
+                $("#historyFrame").attr("src", "search_results_panel.html?field=0&query="+$("#inputCodeNo").val());
+              }
+            }
+            else if ($("#historyPanel").is(":visible")){
+              $("#historyPanel").hide(500);
+              $("#historyFrame").attr("src", "");
+            }
+          });
+
+          $("#toggleWorksheetPanel").click(function() {
+            console.log($("#chooseWorksheet").val());
+            if ($("#worksheetPanel").is(":hidden") && $("#chooseWorksheet").val() != null){
+              if ($("#historyPanel").is(":visible")){
+                $("#historyPanel").hide(500);
+                setTimeout(function(){
+                  $("#historyFrame").attr("src", "");
+                }, 500);
+                $("#worksheetPanel").delay(500).show(500);
+                setTimeout(function(){
+                  $("#worksheetFrame").attr("src", "worksheet_panel.html?id="+$("#chooseWorksheet").val());
+                }, 500);
+              }
+              else{
+                $("#worksheetPanel").show(500);
+                $("#worksheetFrame").attr("src", "worksheet_panel.html?id="+$("#chooseWorksheet").val());
+              }
+            }
+            else if ($("#worksheetPanel").is(":visible")){
+              $("#worksheetPanel").hide(500);
+              $("#worksheetFrame").attr("src", "");
+            }
+          });
+
+          $("#batch_record").on("change", "#inputPenetration", function(){
+            if (pH1_ != -1 && pH2_ != -1){
+              if ($("#inputPenetration").val() != ""){
+                var pen_ = parseInt($("#inputPenetration").val());
+                if (pen_ < pH1_ || pen_ > pH2_){
+                  $("#inputPenetration").css("border-color", "#ff9100");
+                  $("#inputPenetration").attr("title", "Allowed range: " + pH1_ + " - " + pH2_);
+                  $("#inputPenetration").tooltip('enable');
+                }
+                else{
+                  $("#inputPenetration").css("border-color", "#ced4da");
+                  $("#inputPenetration").tooltip('disable');
+                }
+              }
+            }
+          });
+
+          function validateForm(){
+            $("#batch_record").children().find("input").each(function(){
+              if ($(this).val() == ""){
+                return false;
+              }
+            });
+          }
+          </script>
+
+  </body>
+</html>

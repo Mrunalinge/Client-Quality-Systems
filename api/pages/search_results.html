@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
+    <link rel="stylesheet2" type="text/css" href="../css/dataTables.bootstrap4.min.css">
+
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script type="text/javascript" src="../js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="../js/dataTables.bootstrap4.min.js"></script>
+
+    <title>Search Results</title>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-sm navbar-light bg-light border-bottom border-dark">
+      <a href="/"><img src="/images/home.png"></a> <!-- Home by Anang Taufik from the Noun Project -->
+      <div class="navbar-collapse collapse justify-content-stretch" id="navbar5">
+          <form class="w-50 pl-4">
+              <div class="form-inline">
+                  <div class="w-25">
+                      <select class="form-control w-100 rounded-0" id="searchField">
+                          <option selected>Field...</option>
+                          <option value= "Code No.">Code No.</option>
+                          <option value= "Date of Manufacture">Date of Manufacture</option>
+                          <option value = "Batch Number">Batch Number</option>
+                      </select>
+                  </div>
+                  <div class="input-group w-50">
+                      <input type="text" class="form-control w-75 rounded-0" placeholder="Search Batch Records" id="searchBar">
+                      <span class="input-group-btn">
+                          <button class="btn btn-outline-secondary rounded-0" type="button" id="goButton">GO</button>
+                      </span>
+                  </div>
+              </div>
+          </form>
+      </div>
+  </nav>
+  <div style="width:95%; margin: 0 auto">
+    <table id="example" class="table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>CODE NO.</th>
+                <th>DATE</th>
+                <th>BATCH NO.</th>
+                <th>SIZE</th>
+                <th>TESTS AND ADJUSTMENTS</th>
+                <th>DROP POINT</th>
+                <th>A.M.</th>
+                <th>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</th>
+            </tr>
+        </thead>
+        <tbody>
+          <tr>
+              <td>10950</td>
+              <td>7/16/20</td>
+              <td>7-61</td>
+              <td>1900</td>
+              <td>(1900) 0.0/0.07, 3# Rosin 0.0/0.03, 3# Rosin 0.28/0.0</td>
+              <td>352</td>
+              <td>(44) 46-58-29</td>
+              <td></td>
+          </tr>
+          <tr>
+              <td>10950</td>
+              <td>7/15/20</td>
+              <td>7-56</td>
+              <td>1900</td>
+              <td>(1900) 0.0/0.07, 3# Rosin 0.0/0.03, 3# Rosin 0.28/0.0</td>
+              <td>352</td>
+              <td>(44) 46-58-29</td>
+              <td></td>
+          </tr>
+          <tr>
+              <td>10950</td>
+              <td>7/14/20</td>
+              <td>7-47</td>
+              <td>1900</td>
+              <td>(1900) 0.0/0.07, 3# Rosin 0.0/0.03, 3# Rosin 0.28/0.0</td>
+              <td>352</td>
+              <td>(44) 46-58-29</td>
+              <td></td>
+          </tr>
+          <tr>
+              <td>10950</td>
+              <td>11/6/18</td>
+              <td>11-30</td>
+              <td>1900</td>
+              <td>(1900) 0.0/0.07, 3# Rosin 0.0/0.03, 3# Rosin 0.28/0.0</td>
+              <td>352</td>
+              <td>(44) 46-58-29</td>
+              <td></td>
+          </tr>
+          <tr>
+              <td>10950</td>
+              <td>10/12/18</td>
+              <td>10-43</td>
+              <td>1900</td>
+              <td>(1900) 0.0/0.07, 3# Rosin 0.0/0.03, 3# Rosin 0.28/0.0</td>
+              <td>352</td>
+              <td>(44) 46-58-29</td>
+              <td></td>
+          </tr>
+        </tbody>
+    </table>
+  </div>
+    <script>
+      $(document).ready(function() {
+        $('#example').DataTable({
+          "order": [[1, "desc"]],
+          stateSave: true
+        });
+      });
+
+      // Function borrowed from https://stackoverflow.com/questions/901115/how-can-i-get-query-string-values-in-javascript
+      function getParameterByName(name, url = window.location.href) {
+        name = name.replace(/[\[\]]/g, '\\$&');
+        var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, ' '));
+      }
+      $("#goButton").click(function() {
+          var x = $("#searchField :selected").text();
+          console.log(x);
+          var y = $("#searchBar").val();
+          console.log(y);
+          var obj = {option: x, search: y};
+          var input = JSON.stringify(obj);
+          console.log(input);
+          var api_url = "../batches/search.php";
+          $.ajax({
+                  url: api_url ,
+                  type: 'POST',
+                  dataType: 'text',
+                  contentType: "application/json",
+                  data: input,
+                  success: function(result) {
+                      alert(result);
+                      
+                     // result = JSON.stringify(result);
+                     result= JSON.parse(result);
+                     console.log(result.records);
+                     var len = Object.keys(result.records).length;
+
+                      for(var i=0; i< len;i++){
+                          var product_code = result.records[i].product_code;
+                          var date = result.records[i].created_date
+                          var batch_no = result.records[i].batch_num;
+                          var batch_size = result.records[i].batch_size;
+                          var tests_adjustment = "";
+                          var drop_point = result.records[i].dp;
+                          var am = result.records[i].am_pen;
+                          console.log(result.records[i].batch_id);
+                          $("#example tr:last").after('<tr><td> '+ product_code+ ' </td><td> '+ date+ ' </td><td> '+ batch_no+ ' </td><td> '+ batch_size+ ' </td><td> '+ tests_adjustment+ ' </td><td> '+ drop_point+ ' </td><td> '+ am+ ' </td></tr>');
+                          
+                      }
+                      
+                  },
+                  error: function(jqXHR, exception){
+                    console.log(jqXHR);
+                    console.log(exception);
+                  }
+              }); 
+      });
+    </script>
+
+  </body>
+</html>

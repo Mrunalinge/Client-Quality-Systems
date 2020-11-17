@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
+    <link rel="stylesheet2" type="text/css" href="../css/dataTables.bootstrap4.min.css">
+
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script type="text/javascript" src="../js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="../js/dataTables.bootstrap4.min.js"></script>
+
+    <title>Search Results</title>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-sm navbar-light bg-light border-bottom border-dark">
+      <a href="/"><img src="../images/home.png"></a> <!-- Home by Anang Taufik from the Noun Project -->
+      <div class="navbar-collapse collapse justify-content-stretch" id="navbar5">
+        <div class="w-100 text-center h1 font-weight-bold">
+          MANUFACTURING WORKSHEETS
+        </div>
+      </div>
+  </nav>
+  <div style="width:50%; margin: 0 auto">
+    <!-- EXAMPLE DATA - REPLACE WITH DATABASE DATA -->
+    <table id="example" class="table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>CODE NO.</th>
+                <th>CUSTOMER</th>
+                <th>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</th>
+            </tr>
+        </thead>
+        <tbody>
+          <tr>
+              <td>10950</td>
+              <td>ALEXCO.</td>
+              <td></td>
+          </tr>
+          <tr>
+              <td>10950</td>
+              <td>ALEXCO.</td>
+              <td></td>
+          </tr>
+          <tr>
+              <td>10565-2</td>
+              <td>ALEXCO.</td>
+              <td></td>
+          </tr>
+          <tr>
+              <td>10565-2</td>
+              <td>ALEXCO.</td>
+              <td></td>
+          </tr>
+          <tr>
+              <td>11471-00</td>
+              <td>ALEXCO.</td>
+              <td></td>
+          </tr>
+        </tbody>
+    </table>
+  </div>
+    <script>
+      $(document).ready(function() {
+        $('#example').DataTable({
+          "order": [[1, "desc"]],
+          stateSave: true
+        });
+      });
+
+      // Function borrowed from https://stackoverflow.com/questions/901115/how-can-i-get-query-string-values-in-javascript
+      function getParameterByName(name, url = window.location.href) {
+        name = name.replace(/[\[\]]/g, '\\$&');
+        var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, ' '));
+      }
+    </script>
+
+  </body>
+</html>

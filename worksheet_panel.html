@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css">
+    <link rel="stylesheet2" type="text/css" href="/css/dataTables.bootstrap4.min.css">
+
+    <script type="text/javascript" src="/js/jquery-3.5.1.js"></script>
+    <script type="text/javascript" src="/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="/js/dataTables.bootstrap4.min.js"></script>
+
+    <style>
+      .border-bottom{
+        border-bottom:1px solid #000!important;
+      }
+    </style>
+
+    <title>View Worksheet</title>
+  </head>
+  <body>
+  <div style="width:95%; margin: 0 auto" id="main_data">
+    <div class="container">
+      <div class="pb-4">
+        <div class="container" id="preliminaryInfo">
+          <div class="row pb-2 border-bottom">
+            <div class="col-2 d-flex flex-row-reverse">
+              <b>CODE NO:</b>
+            </div>
+            <div class="col-10 d-flex flex-row">
+              <span id="CodeNo"></span>
+              <b class="pl-5 pr-3">SPONGE WT:</b>
+              <span id="Weight"></span>
+              <b class="pl-5 pr-3">CUSTOMER:</b>
+              <span id="Customer"></span>
+              <div class="col-1"></div>
+            </div>
+          </div>
+          <div class="row pt-1 pb-2 border-bottom">
+            <div class="col-2 d-flex flex-row-reverse">
+              <b>AM PEN:</b>
+            </div>
+            <div class="col-8">
+              <span id="minPen"></span>
+              <span class="mx-2">—</span>
+              <span id="maxPen"></span>
+              <!-- <b class="pl-5 pr-4">SPONGE WT:</b>
+              <span class="col-2" id="SpongeWt"></span> -->
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="pb-3">
+        <div class="container" id='steps'>
+          <div class="row stepRow border-bottom" id="step_1">
+            <div class="col-2 d-flex flex-row-reverse">
+              <b class="">STEPS:&nbsp&nbsp&nbsp&nbsp1.</b>
+            </div>
+            <div class="col-10 pb-2">
+              <span id="step_1_text"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="pb-3">
+        <div class="container" id='ingredients'>
+          <div class="row ingredientRow py-1 border-bottom" id="ingredient_1">
+            <div class="col-2 d-flex flex-row-reverse">
+              <b class="py-2">INGREDIENTS:&nbsp&nbsp&nbsp&nbsp1.</b>
+            </div>
+            <div class="col-10 mt-2">
+              <span id="ingredient_1_text"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="pt-3">
+        <div class="container">
+          <div class="row">
+            <div class="col-2 d-flex flex-row-reverse align-items-start">
+              <b>NOTES</b>
+            </div>
+            <div class="form-inline col-10 align-items-end">
+              <textarea class="col-10" rows="3" id="Notes"></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+    <script>
+      $(document).ready(function() {
+        var worksheet_id = getParameterByName("id");
+        obj = {worksheet_id:worksheet_id};
+        input = JSON.stringify(obj);
+        api_url = "api/worksheet/readOne.php";
+
+        $.ajax({
+          url: api_url,
+          async: false,
+          type: 'POST',
+          dataType: 'text',
+          contentType: "application/json",
+          data: input,
+          success: function(result) {
+            result = JSON.parse(result);
+            result = result.records[0];
+            $("#CodeNo").text(result.product_code);
+            $("#Weight").text(result.weight);
+            $("#Customer").text(result.customer);
+            $("#minPen").text(result.min_pen);
+            $("#maxPen").text(result.max_pen);
+            // $("#SpongeWt").text("???");
+            $("#Notes").val(result.notes);
+            $("#Notes").attr("disabled", true);
+          },
+          error: function(jqXHR, exception){
+            console.log(jqXHR);
+            console.log(exception);
+          }
+        });
+
+        api_url = "api/steps/search.php";
+
+        $.ajax({
+          url: api_url,
+          async: false,
+          type: 'POST',
+          dataType: 'text',
+          contentType: "application/json",
+          data: input,
+          success: function(result) {
+            result = JSON.parse(result);
+            result = result.records;
+            for (var i = 0; i < result.length; i++){
+              if (i == 0){
+                $("#step_1_text").text(result[i].step_text);
+              }
+              else{
+                html = '';
+                html += '<div class="row py-1 border-bottom">';
+                html += '<div class="col-2 d-flex flex-row-reverse">';
+                html += '<b class="py-1">' + (i + 1) + '.</b></div>';
+                html += '<div class="col-10 mt-1">';
+                html += '<span>' + result[i].step_text + '</span>';
+                html += '</div></div>';
+
+                $('#steps').append(html);
+              }
+            }
+          },
+          error: function(jqXHR, exception){
+            console.log(jqXHR);
+            console.log(exception);
+          }
+        });
+
+        api_url = "api/ingredients/search.php";
+
+        $.ajax({
+          url: api_url,
+          async: false,
+          type: 'POST',
+          dataType: 'text',
+          contentType: "application/json",
+          data: input,
+          success: function(result) {
+            result = JSON.parse(result);
+            result = result.records;
+            for (var i = 0; i < result.length; i++){
+              if (i == 0){
+                $("#ingredient_1_text").text(result[i].ingredient_amt + " " + result[i].ingredient_unit + " " + result[i].ingredient_mtrl);
+              }
+              else{
+                html = '';
+                html += '<div class="row py-1 border-bottom">';
+                html += '<div class="col-2 d-flex flex-row-reverse">';
+                html += '<b class="py-1">' + (i + 1) + '.</b></div>';
+                html += '<div class="col-10 mt-1">';
+                html += '<span>' + result[i].ingredient_amt + " " + result[i].ingredient_unit + " " + result[i].ingredient_mtrl + '</span>';
+                html += '</div></div>';
+
+                $('#ingredients').append(html);
+              }
+            }
+          },
+          error: function(jqXHR, exception){
+            console.log(jqXHR);
+            console.log(exception);
+          }
+        });
+      });
+
+      // Function borrowed from https://stackoverflow.com/questions/901115/how-can-i-get-query-string-values-in-javascript
+      function getParameterByName(name, url = window.location.href) {
+        name = name.replace(/[\[\]]/g, '\\$&');
+        var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, ' '));
+      }
+    </script>
+
+  </body>
+</html>
